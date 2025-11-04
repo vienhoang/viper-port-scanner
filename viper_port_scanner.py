@@ -9,23 +9,29 @@ import socket
 import sys
 from tqdm import tqdm
 from colorama import init, Fore
+from ascii_magic import AsciiArt
 
 # Init colors
 init()
 GREEN = Fore.GREEN
-MAGENTA =Fore.MAGENTA
-BLUE = Fore.BLUE
-RESET = Fore.RESET
 
 # Global list to save ports
 open_ports = []
+
+# Setup ascii banner image
+def ascii_banner():
+    print(GREEN + "*" * 120)
+    my_art = AsciiArt.from_image('viper.jpg')
+    my_output = my_art.to_ascii()
+    print(my_output)
+    print("Viper Port Scanner - Scan Hard, Scan Fast, No Mercy!!!")
         
 # Set range ports, including the max port
 def start_multiscan(target, start_port, max_port, timeout=1.0):
 
     # Calculation for progress bar
     total_ports = max_port - start_port + 1
-    with tqdm(total=total_ports, desc=f"{BLUE}Scanning {target} from [{start_port}] to [{max_port}]", unit="port") as progress_bar:
+    with tqdm(total=total_ports, desc=f"{GREEN}Scanning {target} from [{start_port}] to [{max_port}]", unit="port") as progress_bar:
 
         # Set range ports, including the max port
         for port in range(start_port, max_port + 1):
@@ -53,26 +59,26 @@ def start_multiscan(target, start_port, max_port, timeout=1.0):
                         if banner:
                             # Add open port to the open_ports list
                             open_ports.append(f"Port {port} : Banner {banner}")
-                            progress_bar.write(f"\nBanner for {target}:{port} -> {banner}")
+                            progress_bar.write(f"\n{GREEN}Banner for {target}:{port} -> {banner}")
                         else:
                             open_ports.append(f"Port {port} : No banner received")
-                            progress_bar.write(f"\nNo banner received for {target}:{port}")
+                            progress_bar.write(f"\n{GREEN}No banner received for {target}:{port}")
 
                     # Socket timed out error
                     except socket.timeout:
                         open_ports.append(f"Port {port} : No banner (timeout)")
-                        progress_bar.write(f"\nNo banner (timeout) for {target}:{port}")
+                        progress_bar.write(f"\n{GREEN}No banner (timeout) for {target}:{port}")
                     # Catch other errors
                     except Exception as e:
                         open_ports.append(f"Port {port} : Error reading banner {e}")
-                        progress_bar.write(f"\nError reading banner for {target}:{port}: {e}")
+                        progress_bar.write(f"\n{GREEN}Error reading banner for {target}:{port}: {e}")
             # DNS lookup failed error
             except socket.gaierror as e:
-                progress_bar.write(f"\nHostname could not be resolved. {e}")
+                progress_bar.write(f"\n{GREEN}Hostname could not be resolved. {e}")
                 return open_ports
             # Socket error
             except socket.error as e:
-                progress_bar.write(f"\nCould not connect to server. {e}")
+                progress_bar.write(f"\n{GREEN}Could not connect to server. {e}")
                 return open_ports
             # Close socket
             finally:
@@ -100,7 +106,7 @@ def save_ports_to_file(target, port_list, file_name="port_results.txt"):
                 for port in port_list:
                     f.write(f"{port}\n")
                 # Print out the result of the saved file 
-                print(f"{MAGENTA}The results have been saved to the file: {file_name}")
+                print(f"{GREEN}The results have been saved to the file: {file_name}")
 
         # File not found error
         except FileNotFoundError:
@@ -119,6 +125,8 @@ def save_ports_to_file(target, port_list, file_name="port_results.txt"):
 # Run the program
 if __name__ == "__main__":
     
+    ascii_banner()
+        
     # Set default timeout to 1s
     timeout = 1
 
@@ -150,16 +158,16 @@ if __name__ == "__main__":
     # Else inputs from console
     # As last resort, it will ask the user to input IP or domain.
     else: # It will convert <domain name> to IPv4, before asking for <start_port> and <end_port>.
-        domain_name = str(input(BLUE + 'Enter target IP or domain: '))
+        domain_name = str(input(GREEN + 'Enter target IP or domain: '))
         # Spit url and get the domain name
         if "http" in domain_name:
             target = domain_name.split("://")
             domain_name = target[1]
 
         target = socket.gethostbyname(domain_name)
-        start_port = int(input(BLUE + 'Starting port: '))
-        max_port = int(input(BLUE + 'Ending port: '))
-        timeout = float(input(BLUE + "Set timout for each port: "))
+        start_port = int(input(GREEN + 'Starting port: '))
+        max_port = int(input(GREEN + 'Ending port: '))
+        timeout = float(input(GREEN + "Set timout for each port: "))
         
     # Scan the give url with start and end ports
     start_multiscan(target, start_port, max_port, timeout)
