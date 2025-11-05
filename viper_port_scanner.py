@@ -18,13 +18,16 @@ GREEN = Fore.GREEN
 # Global list to save ports
 open_ports = []
 
+#Todo-list
+# Save a new txt file with datetime after each scan, threading
+
 # Setup ascii banner image
 def ascii_banner():
     print(GREEN + "*" * 120)
-    my_art = AsciiArt.from_image('viper.jpg')
+    my_art = AsciiArt.from_image('assets/viper.jpg')
     my_output = my_art.to_ascii()
     print(my_output)
-    print("Viper Port Scanner - Scan Hard, Scan Fast, No Mercy!!!")
+    print("Viper Port Scanner - Scan Hard, Scan Fast, No Mercy!!!".center(120))
         
 # Set range ports, including the max port
 def start_multiscan(target, start_port, max_port, timeout=1.0):
@@ -125,6 +128,7 @@ def save_ports_to_file(target, port_list, file_name="port_results.txt"):
 # Run the program
 if __name__ == "__main__":
     
+    # Display banner
     ascii_banner()
         
     # Set default timeout to 1s
