@@ -7,9 +7,14 @@ Date: 251104
 # Importing modules
 import socket
 import sys
+# For progress bar
 from tqdm import tqdm
+# For text colors
 from colorama import init, Fore
+# For ascii banner art
 from ascii_magic import AsciiArt
+# For background music
+import pygame
 
 # Init colors
 init()
@@ -21,6 +26,12 @@ open_ports = []
 #Todo-list
 # Save a new txt file with datetime after each scan, threading
 
+# Load music and play it
+def play_music():
+    pygame.mixer.init()
+    pygame.mixer.music.load("assets/nes_bg_track.wav")
+    pygame.mixer.music.play(loops=-1)
+
 # Setup ascii banner image
 def ascii_banner():
     print(GREEN + "*" * 120)
@@ -30,7 +41,7 @@ def ascii_banner():
     print("Viper Port Scanner - Scan Hard, Scan Fast, No Mercy!!!".center(120))
         
 # Set range ports, including the max port
-def start_multiscan(target, start_port, max_port, timeout=1.0):
+def start_multiscan(target, start_port, max_port, timeout):
 
     # Calculation for progress bar
     total_ports = max_port - start_port + 1
@@ -90,6 +101,9 @@ def start_multiscan(target, start_port, max_port, timeout=1.0):
                 
         # Save port to file
         save_ports_to_file(target, open_ports)
+
+        # Pause music
+        pygame.mixer.music.pause()
 
 # Save the ports to file, default file name port_results.txt
 def save_ports_to_file(target, port_list, file_name="port_results.txt"):
@@ -152,26 +166,39 @@ if __name__ == "__main__":
         max_port = int(sys.argv[3])   
         
     # I.e multi_port_scanner.py scanme.nmap.org
-    # With only 2 arguments, it will ask the user to input <start_port> and <end_port>.
+    # With only 2 arguments or use default ports 1, 25
     elif len(sys.argv) == 2:
-    # Translate hostname to IPv4. It will also accept just the IP.
+        # Translate hostname to IPv4. It will also accept just the IP.s
         target = socket.gethostbyname(sys.argv[1])
-        start_port = int(input('starting port: '))
-        max_port = int(input('ending port: '))
+        start_port = 1
+        max_port = 25
 
     # Else inputs from console
     # As last resort, it will ask the user to input IP or domain.
     else: # It will convert <domain name> to IPv4, before asking for <start_port> and <end_port>.
-        domain_name = str(input(GREEN + 'Enter target IP or domain: '))
+        domain_name = str(input(GREEN + 'Enter target IP or domain (default: scanme.nmap.org): '))
         # Spit url and get the domain name
         if "http" in domain_name:
             target = domain_name.split("://")
             domain_name = target[1]
+        # Set default domain if the input is empty, space or 0
+        elif not domain_name or domain_name.strip() == "" or domain_name == "0" :
+            domain_name = "scanme.nmap.org"
 
+        # Get IP from domain
         target = socket.gethostbyname(domain_name)
-        start_port = int(input(GREEN + 'Starting port: '))
-        max_port = int(input(GREEN + 'Ending port: '))
-        timeout = float(input(GREEN + "Set timout for each port: "))
-        
+        # Get start port or set default to 1 
+        start_port = input(GREEN + 'Starting port (default: 1): ') or 1
+        start_port = int(start_port)
+        # Get max port or set default to 25
+        max_port = input(GREEN + 'Ending port (default 25): ') or 25
+        max_port = int(max_port)
+        # Get timeout or set default to 1.0
+        timeout = input(GREEN + "Set timout for each port (default: 1.0): ") or "1.0"
+        timeout = float(timeout)
+
+    # Play music
+    play_music()  
+    
     # Scan the give url with start and end ports
     start_multiscan(target, start_port, max_port, timeout)
