@@ -3,9 +3,10 @@ __pycache__/
 *.py[codz]
 *$py.class
 
-# Text files, Audacity folder
+# Text files, audacity and results folder
 *.txt
 *audacity
+*results
 
 # C extensions
 *.so

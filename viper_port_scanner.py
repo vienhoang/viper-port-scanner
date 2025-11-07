@@ -15,6 +15,11 @@ from colorama import init, Fore
 from ascii_magic import AsciiArt
 # For background music
 import pygame
+# For path finding
+import os
+# For handling unix time and date
+import time
+from datetime import datetime
 
 # Init colors
 init()
@@ -24,7 +29,7 @@ GREEN = Fore.GREEN
 open_ports = []
 
 #Todo-list
-# Save a new txt file with datetime after each scan, threading
+#threading
 
 # Load music and play it
 def play_music():
@@ -39,7 +44,67 @@ def ascii_banner():
     my_output = my_art.to_ascii()
     print(my_output)
     print("Viper Port Scanner - Scan Hard, Scan Fast, No Mercy!!!".center(120))
+
+# Get date and time from unix timestamp
+def get_date_time():
+    # Get unix timestamp
+    unix_time = int(time.time())
+
+    # Convert to readable date, return it
+    date = datetime.fromtimestamp(unix_time)
+    return date.strftime('%Y%m%d_%H_%M_%S_')
+
+# Create a folder
+def create_folder(folder_name="results"):
+    # Create folder if it doesn't exist
+    if not os.path.exists(folder_name):
+        os.mkdir(folder_name)
+    
+    # Absolute path to the folder, return it
+    abs_path = os.path.abspath(folder_name)
+    return abs_path
+
+# Save the ports to file, default file name port_results.txt
+def save_ports_to_file(target, port_list):
+    # Create a file name based of unix timestamp
+    file_name = get_date_time() + target + ".txt"
+
+    # Create folder path
+    folder_path = create_folder()
+    # Create file path
+    file_path = os.path.join(folder_path, file_name)
+
+    # Saves only open ports
+    if port_list:
+        print(f"{GREEN}\nSave ports to file: ") 
+        # Print open port(s)
+        for port in port_list:
+            print(port)    
         
+        # Try to save to file
+        try:
+            with open(file_path, "w") as f:
+                f.write(f"Open ports for target IP {target}\n")
+                # Separate each line with \n at the end
+                for port in port_list:
+                    f.write(f"{port}\n")
+                # Print out the result of the saved file 
+                print(f"{GREEN}The results have been saved to the file: {file_name}")
+
+        # File not found error
+        except FileNotFoundError:
+            print("File not found.")
+        # Writing to file errors
+        except IOError:
+            print("An I/O error occurred.")
+        # Other errors
+        except:
+            print("Something went wrong...")
+        # Close file
+        f.close()
+    else:
+        print("\nNo ports are open.")
+
 # Set range ports, including the max port
 def start_multiscan(target, start_port, max_port, timeout):
 
@@ -103,41 +168,7 @@ def start_multiscan(target, start_port, max_port, timeout):
         save_ports_to_file(target, open_ports)
 
         # Pause music
-        pygame.mixer.music.pause()
-
-# Save the ports to file, default file name port_results.txt
-def save_ports_to_file(target, port_list, file_name="port_results.txt"):
-
-    # Saves only open ports
-    if port_list:
-        print(f"{GREEN}\nSave ports to file: ") 
-        # Print open port(s)
-        for port in port_list:
-            print(port)    
-        
-        # Try to save to file
-        try:
-            with open(file_name, "w") as f:
-                f.write(f"Open ports for target IP {target}\n")
-                # Separate each line with \n at the end
-                for port in port_list:
-                    f.write(f"{port}\n")
-                # Print out the result of the saved file 
-                print(f"{GREEN}The results have been saved to the file: {file_name}")
-
-        # File not found error
-        except FileNotFoundError:
-            print("File not found.")
-        # Writing to file errors
-        except IOError:
-            print("An I/O error occurred.")
-        # Other errors
-        except:
-            print("Something went wrong...")
-        # Close file
-        f.close()
-    else:
-        print("\nNo ports are open.")
+        #pygame.mixer.music.pause()
 
 # Run the program
 if __name__ == "__main__":
@@ -198,7 +229,7 @@ if __name__ == "__main__":
         timeout = float(timeout)
 
     # Play music
-    play_music()  
-    
+    #play_music()  
+
     # Scan the give url with start and end ports
     start_multiscan(target, start_port, max_port, timeout)
