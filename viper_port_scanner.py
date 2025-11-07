@@ -4,7 +4,7 @@ Network Scanner Project With Extra Features
 Student: Vien
 Date: 251104
 """
-# Importing modules
+# For handling sockets, CLI args
 import socket
 import sys
 # For progress bar
@@ -27,9 +27,6 @@ GREEN = Fore.GREEN
 
 # Global list to save ports
 open_ports = []
-
-#Todo-list
-#threading
 
 # Load music and play it
 def play_music():
@@ -67,7 +64,7 @@ def create_folder(folder_name="results"):
 # Save the ports to file, default file name port_results.txt
 def save_ports_to_file(target, port_list):
     # Create a file name based of unix timestamp
-    file_name = get_date_time() + target + ".txt"
+    file_name = get_date_time() + "[" + target + "]"+ ".txt"
 
     # Create folder path
     folder_path = create_folder()
@@ -168,7 +165,7 @@ def start_multiscan(target, start_port, max_port, timeout):
         save_ports_to_file(target, open_ports)
 
         # Pause music
-        #pygame.mixer.music.pause()
+        pygame.mixer.music.pause()
 
 # Run the program
 if __name__ == "__main__":
@@ -229,7 +226,7 @@ if __name__ == "__main__":
         timeout = float(timeout)
 
     # Play music
-    #play_music()  
+    play_music()  
 
     # Scan the give url with start and end ports
     start_multiscan(target, start_port, max_port, timeout)
