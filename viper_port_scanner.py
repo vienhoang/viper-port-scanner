@@ -176,7 +176,7 @@ if __name__ == "__main__":
     # Set default timeout to 1s
     timeout = 1
 
-    # Optional CLI arguments, i.e multi_port_scanner.py scanme.nmap.org 1 30 2
+    # Optional CLI arguments, i.e viper_port_scanner.py scanme.nmap.org 1 30 2
     # len(sys.argv) checks are optional CLI arguments.
     # Assume an argument format of <domain name or IP>, <start_port>, <end_port>, <timeout>
     if len(sys.argv) == 5:
@@ -185,7 +185,7 @@ if __name__ == "__main__":
         max_port = int(sys.argv[3])
         timeout = float(sys.argv[4])
 
-    # Optional CLI arguments, i.e multi_port_scanner.py scanme.nmap.org 1 30
+    # Optional CLI arguments, i.e viper_port_scanner.py scanme.nmap.org 1 30
     # len(sys.argv) checks are optional CLI arguments.
     # Assume an argument format of <domain name or IP>, <start_port>, <end_port>.
     elif len(sys.argv) == 4:
@@ -193,10 +193,10 @@ if __name__ == "__main__":
         start_port = int(sys.argv[2])
         max_port = int(sys.argv[3])   
         
-    # I.e multi_port_scanner.py scanme.nmap.org
+    # I.e viper_port_scanner.py scanme.nmap.org
     # With only 2 arguments or use default ports 1, 25
     elif len(sys.argv) == 2:
-        # Translate hostname to IPv4. It will also accept just the IP.s
+        # Translate hostname to IPv4. It will also accept just the IPs
         target = socket.gethostbyname(sys.argv[1])
         start_port = 1
         max_port = 25
