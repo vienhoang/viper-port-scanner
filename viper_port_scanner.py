@@ -204,6 +204,7 @@ if __name__ == "__main__":
     # Else inputs from console
     # As last resort, it will ask the user to input IP or domain.
     else: # It will convert <domain name> to IPv4, before asking for <start_port> and <end_port>.
+        print("Keep pressing Enter to use the default.")
         domain_name = str(input(GREEN + 'Enter target IP or domain (default: scanme.nmap.org): '))
         # Spit url and get the domain name
         if "http" in domain_name:
