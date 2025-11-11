@@ -112,7 +112,7 @@ deactivate
 ## Extra Features
 - Giant viper banner in ascii
 - Background music when ports are being scanned
-- Save files with based on unix timestamp
+- Save files based on unix timestamp
 - Default inputs when pressing Enter
 
 ## Assets
