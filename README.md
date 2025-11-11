@@ -43,20 +43,20 @@ Follow these steps to set up your local environment and install the necessary pa
 
     * **On macOS / Linux:**
         ```bash
-        # Create a virtual environment named 'venv'
-        python3 -m venv venv
+        # Create a virtual environment named '.venv'
+        python3 -m venv .venv
 
         # Activate the virtual environment
-        source venv/bin/activate
+        source .venv/bin/activate
         ```
 
-    * **On Windows:**
+    * **On Windows (PowerShell):**
         ```bash
-        # Create a virtual environment named 'venv'
-        python -m venv venv
+        # Create a virtual environment named '.venv'
+        python -m venv .venv
 
         # Activate the virtual environment
-        .\venv\Scripts\activate
+        .\.venv\Scripts\Activate.ps1
         ```
 
     Your terminal prompt should now change to show `(venv)` at the beginning, indicating the virtual environment is active.
